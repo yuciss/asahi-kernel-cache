@@ -1,0 +1,29 @@
+name: Build Asahi kernel cache
+
+on:
+  push:
+    paths:
+      - '**.nix'   # catches flake.lock/flake.nix and any module that feeds the kernel
+  workflow_dispatch:  # lets you trigger it manually from the Actions tab
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm    # free native aarch64 runner (public repos only)
+    timeout-minutes: 350          # GitHub hosted runners hard-cap at 360 min
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: cachix/cachix-action@v15
+        with:
+          name: YOUR_CACHIX_CACHE_NAME
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      # Builds from THIS repo's committed flake.lock — same nixpkgs pin,
+      # same apple-silicon-support pin as your local machine (since it
+      # follows the same nixpkgs), so the derivation hash matches and
+      # your Mac gets a cache hit instead of rebuilding.
+      - name: Build linux-asahi kernel
+        run: nix build .#linux-asahi --print-build-logs
