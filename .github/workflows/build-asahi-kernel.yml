@@ -18,7 +18,7 @@ jobs:
 
       - uses: cachix/cachix-action@v15
         with:
-          name: YOUR_CACHIX_CACHE_NAME
+          name: yucic
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
       # Builds from THIS repo's committed flake.lock — same nixpkgs pin,
