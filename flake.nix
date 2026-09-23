@@ -1,8 +1,9 @@
 {
-  description = "Standalone linux-asahi kernel build for caching";
+  description = "Standalone linux-asahi kernel build, for caching via Cachix";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+
     apple-silicon-support = {
       url = "github:nix-community/nixos-apple-silicon";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,7 +17,11 @@
         inherit system;
         overlays = [ apple-silicon-support.overlays.default ];
       };
-    in {
-      packages.${system}.linux-asahi = pkgs.linux-asahi;
+    in
+    {
+      packages.${system} = {
+        linux-asahi = pkgs.linux-asahi;
+        default = pkgs.linux-asahi;
+      };
     };
 }

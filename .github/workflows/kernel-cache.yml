@@ -1,0 +1,33 @@
+name: Build Asahi kernel cache
+
+# Always builds from whatever flake.lock is currently committed —
+# never updates or modifies it. Run update-flake-lock.yml first if you
+# want to build against newer inputs.
+
+on:
+  push:
+    paths:
+      - '**.nix'
+      - 'flake.lock'
+  workflow_dispatch:
+
+concurrency:
+  group: kernel-cache
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm    # free native aarch64 runner (public repos only)
+    timeout-minutes: 350          # GitHub-hosted runners hard-cap at 360 min
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: yucic
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Build linux-asahi kernel
+        run: nix build .#linux-asahi --print-build-logs
