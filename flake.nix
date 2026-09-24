@@ -13,15 +13,18 @@
   outputs = { self, nixpkgs, apple-silicon-support }:
     let
       system = "aarch64-linux";
+
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [ apple-silicon-support.overlays.default ];
+        overlays = [
+          apple-silicon-support.overlays.default
+        ];
       };
     in
     {
       packages.${system} = {
-        linux-asahi = pkgs.linux-asahi;
-        default = pkgs.linux-asahi;
+        linux-asahi = pkgs.linux-asahi.kernel;
+        default = pkgs.linux-asahi.kernel;
       };
     };
 }
