@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-24.04-arm    # free native aarch64 runner (public repos only)
     timeout-minutes: 350          # GitHub-hosted runners hard-cap at 360 min
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: DeterminateSystems/nix-installer-action@main
 
