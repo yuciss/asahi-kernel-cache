@@ -1,3 +1,4 @@
+```
 nix = {
   settings = {
     extra-substituters = [
@@ -9,3 +10,4 @@ nix = {
     ];
   };
 };
+```
